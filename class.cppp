@@ -1,0 +1,57 @@
+#include <iostream>
+using namespace std;
+#include<string>
+class employee
+{
+    private:
+    int id;
+    double salary;
+    string name;
+    
+    public:
+    employee(int id,std::string name,double salary):id(id),name(name),salary(salary){}
+    int getid() const{
+        return id;
+    }
+    std::string getname() const
+    {
+        return name;
+    }
+    double getsalary() const
+    {
+        return salary;
+    }
+    void setid(int id)
+    {
+        this ->id=id;
+    }
+    void setname(std::string name)
+    {
+        this ->name=name;
+    }
+    void setsalary(double salary)
+    {
+        this -> salary=salary;
+    }
+    void displayinfo() const
+    {
+        std::cout<< "Employee id: "<< id<< ",Employee name: "<< name<<",employee salary: "<< salary<< endl;
+    }
+    
+};
+void accessemployeeinfo(employee&employee)
+{
+    cout << "\nEnter  Employee id:\n "<< employee.getid()<< "Enter employee name: "<< employee.getname() << "Enter employee salary: "<< employee.getsalary()<< endl;
+} 
+int main()
+{
+    employee emp1("\n"1,"John doh",50000"\n");
+    employee emp2("\n"2,"xyz",60000"\n");
+    cout << "Employee information after setting new salary"<<endl;
+    emp1.displayinfo();
+    accessemployeeinfo(emp2);
+    cout << "Employee information from function parameter"<<endl;
+    employee emp3=emp1;
+    employee emp4(emp2);
+    return 0;
+}
