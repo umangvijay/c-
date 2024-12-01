@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool isSafe(vector<int>& avail, vector<vector<int>>& max, vector<vector<int>>& alloc) {
+    int n = alloc.size(), m = avail.size();
+    vector<int> work = avail;
+    vector<bool> finish(n, false);
+    vector<int> safeSequence;
+
+    for (int count = 0; count < n; ++count) {
+        bool found = false;
+        for (int i = 0; i < n; ++i) {
+            if (!finish[i]) {
+                bool canAllocate = true;
+                for (int j = 0; j < m; ++j) {
+                    if (max[i][j] - alloc[i][j] > work[j]) {
+                        canAllocate = false;
+                        break;
+                    }
+                }
+                if (canAllocate) {
+                    for (int j = 0; j < m; ++j) work[j] += alloc[i][j];
+                    safeSequence.push_back(i);
+                    finish[i] = true;
+                    found = true;
+                }
+            }
+        }
+        if (!found) return false;
+    }
+
+    cout << "Safe sequence: ";
+    for (int i : safeSequence) cout << i << " ";
+    cout << endl;
+    return true;
+}
+
+int main() {
+    int n, m;
+    cout << "Enter number of processes and resources: ";
+    cin >> n >> m;
+
+    vector<int> available(m);
+    vector<vector<int>> max(n, vector<int>(m));
+    vector<vector<int>> allocation(n, vector<int>(m));
+
+    cout << "Enter available resources: ";
+    for (int &x : available) cin >> x;
+
+    cout << "Enter max matrix: \n";
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            cin >> max[i][j];
+
+    cout << "Enter allocation matrix: \n";
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            cin >> allocation[i][j];
+
+    if (isSafe(available, max, allocation))
+        cout << "System is in a safe state.\n";
+    else
+        cout << "System is NOT in a safe state.\n";
+
+    return 0;
+}
