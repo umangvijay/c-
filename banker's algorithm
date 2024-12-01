@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+const int MAX_PROCESS = 10;
+const int MAX_RESOURCE = 10;
+
+bool isSafe(int need[][MAX_RESOURCE], int alloc[][MAX_RESOURCE], int avail[], int n, int m) {
+    int work[MAX_RESOURCE];
+    bool finish[MAX_PROCESS] = {false};
+    int count = 0;
+
+    for (int i = 0; i < m; i++)
+        work[i] = avail[i];
+
+    while (count < n) {
+        bool found = false;
+        for (int i = 0; i < n; i++) {
+            if (!finish[i]) {
+                bool safe = true;
+                for (int j = 0; j < m; j++) {
+                    if (need[i][j] > work[j]) {
+                        safe = false;
+                        break;
+                    }
+                }
+                if (safe) {
+                    cout << "Process " << i << " is executing.\n";
+                    for (int j = 0; j < m; j++)
+                        work[j] += alloc[i][j];
+                    finish[i] = true;
+                    count++;
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            cout << "Deadlock occurred!\n";
+            return false;
+        }
+    }
+    cout << "The system is in a safe state.\n";
+    return true;
+}
+
+int main() {
+    int n, m;
+    cout << "Enter the number of processes: ";
+    cin >> n;
+    cout << "Enter the number of resources: ";
+    cin >> m;
+
+    int max[MAX_PROCESS][MAX_RESOURCE];
+    int alloc[MAX_PROCESS][MAX_RESOURCE];
+    int need[MAX_PROCESS][MAX_RESOURCE];
+    int avail[MAX_RESOURCE];
+
+    // Input maximum resources
+    for (int i = 0; i < n; i++) {
+        cout << "Process " << i << ":\n";
+        for (int j = 0; j < m; j++) {
+            cout << "Max value for resource " << j + 1 << ": ";
+            cin >> max[i][j];
+        }
+    }
+
+    // Input allocated resources and calculate need
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cout << "Allocated resources for process " << i << ", resource " << j + 1 << ": ";
+            cin >> alloc[i][j];
+            need[i][j] = max[i][j] - alloc[i][j];
+        }
+    }
+
+    // Input available resources
+    for (int i = 0; i < m; i++) {
+        cout << "Available resources of type " << i + 1 << ": ";
+        cin >> avail[i];
+    }
+
+    // Check if the system is in a safe state
+    if (isSafe(need, alloc, avail, n, m))
+        cout << "The above sequence is safe.\n";
+    else
+        cout << "Deadlock occurred!\n";
+
+    return 0;
+}
